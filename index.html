@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Class WhatsApp Bridge</title>
+  <meta name="description" content="Opt in to receive selected WhatsApp group messages by SMS.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="wrap">
+    <div class="brand"><span class="dot"></span> Class WhatsApp Bridge</div>
+    <h1>WhatsApp group updates, delivered by SMS.</h1>
+    <p class="lead">
+      A small messaging service operated by Ari Kanner for people who do not use WhatsApp.
+      People are enrolled only after they explicitly agree to receive relayed messages from selected groups.
+    </p>
+    <nav>
+      <a href="#opt-in">SMS consent</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="grid">
+      <div class="card">
+        <span class="badge">Informational / conversational</span>
+        <h2>What messages are sent?</h2>
+        <p>
+          Messages posted in WhatsApp groups selected for you may be relayed to your mobile phone by SMS.
+          Relayed messages can include the original sender's display name and message text.
+        </p>
+        <p class="small">This program is not used for advertising or promotional marketing.</p>
+      </div>
+      <div class="card">
+        <h2>Important SMS information</h2>
+        <ul>
+          <li>Message frequency varies based on activity in the groups you choose.</li>
+          <li>Message and data rates may apply.</li>
+          <li>Reply <strong>STOP</strong> to opt out.</li>
+          <li>Reply <strong>HELP</strong> for help.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" id="opt-in">
+      <h2>Consent to receive SMS group-message relays</h2>
+      <p>
+        Use this page to create a written consent receipt. This website does not transmit your phone number
+        to a server. After generating the receipt, give or show it to the service operator who invited you.
+        The operator will add your number only after receiving your consent.
+      </p>
+
+      <form id="consentForm">
+        <label for="name">Name</label>
+        <input id="name" name="name" autocomplete="name" required>
+
+        <label for="phone">Mobile phone number</label>
+        <input id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+1 212 555 0123" required>
+
+        <label for="groups">Group(s) you want relayed by SMS</label>
+        <textarea id="groups" name="groups" placeholder="Example: Class group, study group" required></textarea>
+
+        <div class="consent">
+          <input type="checkbox" id="smsConsent" required>
+          <label for="smsConsent" style="margin:0;font-weight:500">
+            I explicitly agree to receive recurring SMS messages from <strong>Class WhatsApp Bridge</strong>
+            containing relayed messages from the group(s) I selected above. Message frequency varies.
+            Message and data rates may apply. I can reply <strong>STOP</strong> to opt out and
+            <strong>HELP</strong> for help. I have reviewed the
+            <a href="terms.html">Terms &amp; Conditions</a> and
+            <a href="privacy.html">Privacy Policy</a>.
+          </label>
+        </div>
+
+        <button type="submit">Generate consent receipt</button>
+        <button type="button" class="secondary" id="clearBtn">Clear</button>
+      </form>
+
+      <div id="receipt" class="receipt" aria-live="polite"></div>
+      <p id="receiptHelp" class="small" hidden>
+        Save, copy, or show this receipt to the service operator. The operator should retain a record of your consent.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Opting out or getting help</h2>
+      <p>
+        You can revoke consent at any time by replying <strong>STOP</strong> to a program text.
+        Reply <strong>HELP</strong> for help, or contact the person who enrolled you in the service.
+      </p>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <div>Program: Class WhatsApp Bridge · Registered brand/operator: Ari Kanner</div>
+    <div><a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms &amp; Conditions</a></div>
+  </footer>
+
+<script>
+(() => {
+  const form = document.getElementById('consentForm');
+  const receipt = document.getElementById('receipt');
+  const help = document.getElementById('receiptHelp');
+  const clear = document.getElementById('clearBtn');
+
+  function normalize(value) {
+    return value.trim().replace(/\s+/g, ' ');
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const name = normalize(document.getElementById('name').value);
+    const phone = normalize(document.getElementById('phone').value);
+    const groups = normalize(document.getElementById('groups').value);
+    const when = new Date().toISOString();
+
+    const text = [
+      'CLASS WHATSAPP BRIDGE — SMS CONSENT RECEIPT',
+      '',
+      'Name: ' + name,
+      'Mobile: ' + phone,
+      'Selected group(s): ' + groups,
+      'Consent timestamp: ' + when,
+      '',
+      'Consent statement:',
+      'I explicitly agree to receive recurring SMS messages from Class WhatsApp Bridge containing relayed messages from the group(s) listed above. Message frequency varies. Message and data rates may apply. Reply STOP to opt out and HELP for help.',
+      '',
+      'Privacy Policy: ' + new URL('privacy.html', location.href).href,
+      'Terms & Conditions: ' + new URL('terms.html', location.href).href
+    ].join('\n');
+
+    receipt.textContent = text;
+    receipt.style.display = 'block';
+    help.hidden = false;
+  });
+
+  clear.addEventListener('click', () => {
+    form.reset();
+    receipt.textContent = '';
+    receipt.style.display = 'none';
+    help.hidden = true;
+  });
+})();
+</script>
+</body>
+</html>
